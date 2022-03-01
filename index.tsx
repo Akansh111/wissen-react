@@ -3,6 +3,34 @@ import { render } from 'react-dom';
 import './style.css';
 
 const App = () => {
+  const [state, setState] = React.useState({
+    userName: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setState({
+      ...state,
+      [name]: value,
+    });
+  };
+
+  const handleLogin = () => {
+    const payload = {
+      email: state.userName,
+      password: state.password,
+    };
+    fetch('https://reqres.in/api/login', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => res.json)
+      .then((res) => console.log(JSON.stringify(res)));
+  };
   return (
     <div>
       <div>
@@ -13,15 +41,19 @@ const App = () => {
             <form>
               <div>
                 <label>Username/Email</label>
-                <input type="text" />
+                <input name="userName" type="text" onChange={handleChange} />
                 <div></div>
               </div>
               <div>
                 <label>Password</label>
-                <input />
+                <input
+                  name="password"
+                  type="password"
+                  onChange={handleChange}
+                />
                 <div></div>
               </div>
-              <button>Login</button>
+              <button onClick={handleLogin}>Login</button>
             </form>
           </div>
         </div>
